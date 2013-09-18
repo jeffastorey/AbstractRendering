@@ -12,3 +12,7 @@ AbstractRendering/doc/*
 AbstractRendering/lib/*
 AbstractRendering/testResults/*
 RemoteSystemsTempFiles
+*.so
+*.o
+*.so.*
+*.o.*

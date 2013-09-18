@@ -1,0 +1,22 @@
+(module 
+  (import ffi)
+
+(define (harlan_luminance len aggs rslt)
+  (let* ((aggs (import-float-vec aggs len))
+         (base (vector 0 0 0))
+         (low  0)
+         (high 255)
+         (max (reduce (lambda (a b) (if (> a b) a b)) aggs))
+         (krslt (kernel ((agg aggs))
+                  (vector (* (/ agg max) high) 0 0))))
+   (for (x 0 len 1)
+     (for (y 0 3)
+      (unsafe-set!-float rslt (+ y (* x 3)) 
+       (vector-ref (vector-ref krslt x) y)))))
+  10.0))
+
+         
+
+     
+       
+
