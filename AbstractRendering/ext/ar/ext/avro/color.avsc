@@ -1,7 +1,0 @@
-{"name":"recordType",
- "namespace":"ar.avro",
- "type":"record",
- "fields":[
-    {"name":"RGBA", "type":{"type":"array", "items":"int"}}
-  ]
- }
