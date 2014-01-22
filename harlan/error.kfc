@@ -1,0 +1,9 @@
+(module 
+
+(define (main) 
+   (println (simple-luminance  255)))
+  
+(define (simple-luminance high) (let* ((high 255)) high))
+
+
+)

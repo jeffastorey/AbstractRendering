@@ -1,22 +1,28 @@
 (module 
-  (import ffi)
+;  (import ffi)
 
-(define (harlan_luminance len aggs rslt)
-  (let* ((aggs (import-float-vec aggs len))
-         (base (vector 0 0 0))
-         (low  0)
-         (high 255)
-         (max (reduce (lambda (a b) (if (> a b) a b)) aggs))
-         (krslt (kernel ((agg aggs))
-                  (vector (* (/ agg max) high) 0 0))))
-   (for (x 0 len 1)
-     (for (y 0 3)
-      (unsafe-set!-float rslt (+ y (* x 3)) 
-       (vector-ref (vector-ref krslt x) y)))))
-  10.0))
+(define (main)
+  (println (simple-luminance (vector 0.0 1 2 3 4 5 6 7 8 9 10) 0 255 0 10))
+  (println (hd-luminance (vector 0.0 1 2 3 4 5 6 7 8 9 10) 0 255)))
+  
+(define (simple-luminance aggs low high min max)
+  (let* ((krslt (kernel ((agg aggs))
+                  (vector (* (/ (- agg min) (- max min)) (- high low)) 0 0))))
+      krslt))
 
-         
+(define (hd-luminance aggs low high)
+  (let* ((min (reduce (lambda (a b) (if (< a b) a b)) aggs))
+         (max (reduce (lambda (a b) (if (> a b) a b)) aggs)))
+      (simple-luminance aggs low high min max)))
 
-     
-       
 
+;(define (harlan_luminance_ffi len aggs rslt)
+;  (let* ((aggs (import-float-vec aggs len))
+;         (hrslt (simple-luminance aggs)))
+;   (for (x 0 len 1)
+;     (for (y 0 3)
+;      (unsafe-set!-float rslt (+ y (* x 3)) 
+;       (vector-ref (vector-ref hrslt x) y))))))
+
+
+)
