@@ -15,6 +15,11 @@
          (max (reduce (lambda (a b) (if (> a b) a b)) aggs)))
       (simple-luminance aggs low high min max)))
 
+;(define (2d-hd-luminance aggs low high)
+;  (let* ((minval (lambda (a b) (if (< a b) a b)))
+;         (minvec (lambda (v) (reduce minval v)))
+;         (min (reduce minval (kernel ((subaggs aggs)) (minvec subaggs))))) ;;Kind of ugly...
+
 
 ;(define (harlan_luminance_ffi len aggs rslt)
 ;  (let* ((aggs (import-float-vec aggs len))

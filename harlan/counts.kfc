@@ -1,0 +1,48 @@
+(module
+   ;take a list of points (represented as (x . y)) and produce a set of count aggregates
+   ;Aggregates are represented as (scan . values) where 'scan' tells the width of the grid
+
+;scale-x scale-y translate-x translate-y 
+(define-datatype Transform (Transform float float float float))
+(define-datatype Point (Point float float))
+
+
+(define (project trans points)
+   (match trans ((Transform sx sy tx ty)
+       (kernel ((p points))
+          (match p 
+            ((Point px py)  (Point (* sx (+ tx px))
+                                   (* sy (+ ty py)))))))))
+
+(define (count width height points)
+   (kernel* ((x (iota width)) (y (iota height)))
+            (reduce + (kernel ((p points))
+                              (match p ((Point px py)  ;;This match is annoying...generalize destructuring? Let? 
+                                          (if (and (= x (float->int px)) 
+                                                   (= y (float->int py))) 1 0)))))))  
+
+
+;What I wanted to write----
+;(struct Transform sx:float sy:float tx:float ty:float)
+;(struct Point x:float y:float)
+;
+;(define (project trans points)
+;    (kernel ((p points))
+;        (Point (* trans.sx (+ trans.tx p.px))
+;               (* trans.sy (+ trans.ty p.py)))))))))
+;
+;(define (count width height points)
+;    (kernel* ((x (iota width) (y (iota height))))
+;        (reduce + (kernel ((p points)
+;                    (if (and (= x (float->int p.x)) (= y (float->int p.y))) 1 0))))))
+;;;;Or something with 'filter' or 'map' instead of kernel
+
+
+
+(define (main)
+  (println (count 2 2 (vector (Point 0 0) (Point 1 1) (Point 1 0) (Point 0 1))))
+  (println (count 2 2 (vector (Point 1 1) (Point 1 1) (Point 0 0) (Point 0 0))))
+  (println (count 2 2 (project (Transform .1 .1 0 0) (vector (Point 0 0) (Point 10 10) (Point 10 0) (Point 0 10)))))
+  (println (count 2 2 (project (Transform 1   1 -5 -5) (vector (Point 5 5) (Point 6 6) (Point 6 5) (Point 5 6)))))
+)
+)
